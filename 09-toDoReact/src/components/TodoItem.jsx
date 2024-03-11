@@ -20,7 +20,12 @@ function TodoItem({ todo }) {
         todo.completed ? 'bg-[#c6e9a7]' : 'bg-[#ccbed7]'
       }`}
     >
-      <input type="checkbox" className="cursor-pointer" checked={todo.completed} onChange={toggleCompleted} />
+      <input
+        type="checkbox"
+        className="cursor-pointer"
+        checked={todo.completed}
+        onChange={toggleCompleted}
+      />
       <input
         type="text"
         className={`border outline-none w-full bg-transparent rounded-lg ${
