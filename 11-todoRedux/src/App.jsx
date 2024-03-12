@@ -1,7 +1,7 @@
 import ToDoForm from './components/ToDoForm';
 import { useSelector } from 'react-redux';
 import ToDoItem from './components/ToDoItem';
-import { useEffect } from 'react';
+
 function App() {
   const todos = useSelector((state) => state.todo.todos);
   localStorage.setItem('todos', JSON.stringify(todos));
