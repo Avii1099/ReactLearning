@@ -8,11 +8,10 @@ function App() {
   let start_message =
     'To Increment Value click on `+` icon and to decrement click `-`';
   const [message, setMessage] = useState(start_message);
+
   useEffect(() => {
     if (value > 9) {
       setMessage("Now you can't increase value above 10");
-    } else {
-      setMessage(start_message);
     }
   }, [value]);
 
