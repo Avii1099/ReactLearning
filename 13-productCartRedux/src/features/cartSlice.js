@@ -45,6 +45,8 @@ const cartSlice = createSlice({
           name: actions.payload.name,
           price: actions.payload.price,
           imageSrc: actions.payload.image,
+          color: actions.payload.selectedColor.toUpperCase(),
+          size: actions.payload.selectedSize,
         });
         state.totalCartProduct += 1;
         state.totalPrice += Number(actions.payload.price);

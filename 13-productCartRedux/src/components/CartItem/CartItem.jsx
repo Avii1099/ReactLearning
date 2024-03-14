@@ -1,8 +1,16 @@
 import { Trash } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { indianCurrency } from '../../utils/utils';
+import { removeFromCart } from '../../features/cartSlice';
+import { useState } from 'react';
 
 export function CartItem() {
   const cartProduct = useSelector((state) => state.cart.cartProduct);
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
+  const totalCartProduct = useSelector((state) => state.cart.totalCartProduct);
+  const dispatch = useDispatch();
+  const [qty, setQty] = useState(1);
+
   return (
     <div className="mx-auto max-w-7xl px-2 lg:px-0">
       <div className="mx-auto max-w-2xl py-8 lg:max-w-7xl">
@@ -54,14 +62,14 @@ export function CartItem() {
                           </div>
                           <div className="mt-1 flex items-end">
                             <p className="text-xs font-medium text-gray-500 line-through">
-                              {product.originalPrice}
+                              ₹ {indianCurrency(product.price)}
                             </p>
                             <p className="text-sm font-medium text-gray-900">
-                              &nbsp;&nbsp;{product.price}
+                              &nbsp;&nbsp;₹ {indianCurrency(product.price)}
                             </p>
                             &nbsp;&nbsp;
                             <p className="text-sm font-medium text-green-500">
-                              {product.discount}
+                              0% Off
                             </p>
                           </div>
                         </div>
@@ -70,17 +78,23 @@ export function CartItem() {
                   </li>
                   <div className="mb-2 flex">
                     <div className="min-w-24 flex">
-                      <button type="button" className="h-7 w-7">
+                      <button
+                        type="button"
+                        className="h-7 w-7"
+                        onClick={() => setQty(qty ? qty - 1 : 0)}
+                      >
                         -
                       </button>
                       <input
                         type="text"
                         className="mx-1 h-7 w-9 rounded-md border text-center"
-                        defaultValue={1}
+                        defaultValue={qty}
+                        value={qty}
                       />
                       <button
                         type="button"
                         className="flex h-7 w-7 items-center justify-center"
+                        onClick={() => setQty(qty + 1)}
                       >
                         +
                       </button>
@@ -89,6 +103,14 @@ export function CartItem() {
                       <button
                         type="button"
                         className="flex items-center space-x-1 px-2 py-1 pl-0"
+                        onClick={() =>
+                          dispatch(
+                            removeFromCart({
+                              id: product.id,
+                              price: product.price,
+                            })
+                          )
+                        }
                       >
                         <Trash size={12} className="text-red-500" />
                         <span className="text-xs font-medium text-red-500">
@@ -115,18 +137,18 @@ export function CartItem() {
             <div>
               <dl className=" space-y-1 px-2 py-4">
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm text-gray-800">Price (3 item)</dt>
+                  <dt className="text-sm text-gray-800">
+                    Price ({totalCartProduct} item)
+                  </dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ₹ 52,398
+                    ₹ {indianCurrency(totalPrice)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between pt-4">
                   <dt className="flex items-center text-sm text-gray-800">
                     <span>Discount</span>
                   </dt>
-                  <dd className="text-sm font-medium text-green-700">
-                    - ₹ 3,431
-                  </dd>
+                  <dd className="text-sm font-medium text-green-700">- ₹ 0</dd>
                 </div>
                 <div className="flex items-center justify-between py-4">
                   <dt className="flex text-sm text-gray-800">
@@ -139,7 +161,7 @@ export function CartItem() {
                     Total Amount
                   </dt>
                   <dd className="text-base font-medium text-gray-900">
-                    ₹ 48,967
+                    ₹ {indianCurrency(totalPrice)}
                   </dd>
                 </div>
               </dl>

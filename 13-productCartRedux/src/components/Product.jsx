@@ -12,18 +12,36 @@ export function Product() {
 
   const [showError, setShowError] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState('');
+  const [selectedSize, setSelectedSize] = useState({});
+  const [selectedColor, setSelectedColor] = useState({});
+
+  const triggerAlert = (message) => {
+    setShowErrorMessage(message);
+    setShowError(true);
+    setTimeout(() => {
+      setShowError(false);
+    }, 3000);
+  };
 
   const handleAddToCart = (item) => {
     if (isAlreadyExists) {
-      setShowErrorMessage('This item is already in your Cart');
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-      }, 2000);
+      triggerAlert('This item is already in your Cart');
+    } else if (
+      Object.keys(selectedColor).length === 0 &&
+      Object.keys(selectedSize).length === 0
+    ) {
+      triggerAlert('Please select color and size as well');
     } else {
-      dispatch(addToCart(item));
+      dispatch(
+        addToCart({
+          ...item,
+          selectedColor: selectedColor[item.id],
+          selectedSize: selectedSize[item.id],
+        })
+      );
     }
   };
+
   return (
     <>
       {showError && <ErrorDialog message={showErrorMessage} />}
@@ -54,20 +72,36 @@ export function Product() {
               </div>
               <div className="mt-3 flex items-center space-x-2">
                 <span className="block text-sm font-semibold">Colors : </span>
-                <span className="block h-4 w-4 rounded-full border-2 border-gray-300 bg-red-400"></span>
-                <span className="block h-4 w-4 rounded-full border-2 border-gray-300 bg-purple-400"></span>
-                <span className="block h-4 w-4 rounded-full border-2 border-gray-300 bg-orange-400"></span>
+                {products.colors.map((color, index) => (
+                  <button
+                    key={index}
+                    className={`block h-4 w-4 rounded-full border-2 border-${
+                      selectedColor[products.id] === color
+                        ? 'black'
+                        : 'gray-300'
+                    } bg-${color}-400`}
+                    onClick={() => setSelectedColor({ [products.id]: color })}
+                  />
+                ))}
               </div>
               <div className="mt-5 flex items-center space-x-2">
                 <span className="block text-sm font-semibold">Size : </span>
                 {products.size.map((size) => (
-                  <span
+                  <button
                     key={size}
-                    className="block cursor-pointer rounded-md border border-gray-300 p-1 px-2 text-xs font-medium"
+                    className={`block cursor-pointer rounded-md border p-1 px-2 text-xs font-medium ${
+                      selectedSize[products.id] === size
+                        ? 'bg-blue-500 text-white'
+                        : 'border-gray-300'
+                    }`}
+                    onClick={() => {
+                      setSelectedSize({ [products.id]: size });
+                    }}
                   >
                     {size}
-                  </span>
+                  </button>
                 ))}
+                {showError && <ErrorDialog message={showErrorMessage} />}
               </div>
               <div className="mt-5 flex items-center space-x-2">
                 <span className="block text-sm font-semibold">Price : </span>

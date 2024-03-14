@@ -17,38 +17,52 @@ function Cart() {
           <div className="mt-6 space-y-6">
             <ul className="space-y-4">
               {cartProduct.map((product) => (
-                <li key={product.id} className="flex items-center gap-4">
-                  <img
-                    src={product.imageSrc}
-                    alt={product.name}
-                    className="h-16 w-16 rounded object-contain"
-                  />
-                  <div>
-                    <h3 className="text-sm text-gray-900">{product.name}</h3>
-                    <dl className="mt-0.5 space-y-px text-[10px] text-gray-600">
-                      <div>
-                        <dd className="inline font-bold">
-                          Price : ₹ {indianCurrency(product.price)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="inline">Color:</dt>
-                        {/* <dd className="inline">{product.color}</dd> */}
-                      </div>
-                    </dl>
+                <li
+                  key={product.id}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-4 flex-grow">
+                    <img
+                      src={product.imageSrc}
+                      alt={product.name}
+                      className="h-16 w-16 rounded object-contain"
+                    />
+                    <div>
+                      <h3 className="text-sm text-gray-900">{product.name}</h3>
+                      <dl className="mt-0.5 space-y-px text-[10px] text-gray-600">
+                        <div>
+                          <dd className="inline font-bold">
+                            Price: ₹{indianCurrency(product.price)}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="inline">Color:</dt>{' '}
+                          <dd className="inline">{product.color}</dd>
+                        </div>
+                        <div>
+                          <dt className="inline">Size:</dt>{' '}
+                          <dd className="inline">{product.size}</dd>
+                        </div>
+                      </dl>
+                    </div>
                   </div>
                   <button
                     onClick={() =>
                       dispatch(
-                        removeFromCart({ id: product.id, price: product.price })
+                        removeFromCart({
+                          id: product.id,
+                          price: product.price,
+                        })
                       )
                     }
+                    className="ml-auto"
                   >
-                    <X></X>
+                    <X />{' '}
                   </button>
                 </li>
               ))}
             </ul>
+
             <div className="space-y-4 text-center">
               Total: ₹ {indianCurrency(totalPrice)}
               <Link to={'/cart'}>
